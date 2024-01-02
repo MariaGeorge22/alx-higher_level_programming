@@ -52,7 +52,7 @@ return (new);
 */
 void free_listint(listint_t *head)
 {
-istint_t *current;
+listint_t *current;
 
 while (head != NULL)
 {
