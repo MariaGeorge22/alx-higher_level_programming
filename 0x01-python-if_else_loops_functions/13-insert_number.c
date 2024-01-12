@@ -1,4 +1,8 @@
 #include "lists.h"
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdint.h>
+
 /**
  * insert_node - linked list function
  * @head: first node
