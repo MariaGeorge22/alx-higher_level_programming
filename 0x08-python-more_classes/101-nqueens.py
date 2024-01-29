@@ -1,113 +1,117 @@
 #!/usr/bin/python3
+
 """
-Optional Task 1
+File: 101-nqueens.py
+Desc: The program in this module solves the N queens problem.
+
 """
 import sys
 
 
-def nqueens(size=""):
+def init_board(n):
     """
-    solves the nqueens problem
+    Initialize an `n`x`n` sized chessboard with 0's.
     """
-    if not size.isdigit():
-        print("N must be a number")
-        sys.exit(1)
-    int_size = int(size)
-    if int_size < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-    all_positions = get_all_positions(int_size)
-    possible_solutions = get_possible_solutions(all_positions)
-    for solution in possible_solutions:
-        print(solution)
+    board = []
+    [board.append([]) for i in range(n)]
+    [row.append(' ') for i in range(n) for row in board]
+    return (board)
 
 
-def get_all_positions(size=0):
+def board_deepcopy(board):
     """
-    returns list of all positions
+    Return a deepcopy of a chessboard.
     """
-    positions = []
-    for i in range(size):
-        for j in range(size):
-            positions.append([i, j])
-    return positions
+    if isinstance(board, list):
+        return list(map(board_deepcopy, board))
+    return (board)
 
 
-def get_possible_solutions(positions=[]):
+def get_solution(board):
     """
-    returns list of possible solutions
+    This function gets and retunrs the solution solved.
     """
-    solutions = []
-    first = list(positions)
-    second = list(positions)
-    third = list(positions)
-    fourth = list(positions)
-    for first_position in first:
-        for second_position in second:
-            for third_position in third:
-                for fourth_position in fourth:
-                    if check_if_valid_solution(
-                        first_position,
-                        second_position,
-                        third_position,
-                        fourth_position,
-                    ):
-                        solutions.append([first_position,
-                                          second_position,
-                                          third_position,
-                                          fourth_position,])
-                        for current_list in [first, second, third, fourth]:
-                            if first_position in current_list:
-                                current_list.remove(first_position)
-                            if second_position in current_list:
-                                current_list.remove(second_position)
-                            if third_position in current_list:
-                                current_list.remove(third_position)
-                            if fourth_position in current_list:
-                                current_list.remove(fourth_position)
-    return solutions
+    solution = []
+    for r in range(len(board)):
+        for c in range(len(board)):
+            if board[r][c] == "Q":
+                solution.append([r, c])
+                break
+    return (solution)
 
 
-def check_if_valid_solution(
-    pos_1=[],
-    pos_2=[],
-    pos_3=[],
-    pos_4=[],
-):
+def xout(board, row, col):
     """
-    check if solution is valid
+    X out spots on a chessboard.
     """
-    # print(
-    #     f"current position possibilites: pos_1:{pos_1}\npos_2:{pos_2}\npos_3:{pos_3}\npos_4{pos_4}")
-    if pos_1[0] == pos_2[0]\
-            or pos_1[1] == pos_2[1]\
-            or pos_1[0]**2+pos_1[1]**2 == pos_2[0]**2+pos_2[1]**2:
-        return False
-    if pos_1[0] == pos_3[0]\
-            or pos_1[1] == pos_3[1]\
-            or pos_1[0]**2+pos_1[1]**2 == pos_3[0]**2+pos_3[1]**2:
-        return False
-    if pos_1[0] == pos_4[0]\
-            or pos_1[1] == pos_4[1]\
-            or pos_1[0]**2+pos_1[1]**2 == pos_4[0]**2+pos_4[1]**2:
-        return False
-    if pos_2[0] == pos_3[0]\
-            or pos_2[1] == pos_3[1]\
-            or pos_2[0]**2+pos_2[1]**2 == pos_3[0]**2+pos_3[1]**2:
-        return False
-    if pos_2[0] == pos_4[0]\
-            or pos_2[1] == pos_4[1]\
-            or pos_2[0]**2+pos_2[1]**2 == pos_4[0]**2+pos_4[1]**2:
-        return False
-    if pos_3[0] == pos_4[0]\
-            or pos_3[1] == pos_4[1]\
-            or pos_3[0]**2+pos_3[1]**2 == pos_4[0]**2+pos_4[1]**2:
-        return False
-    return True
+    for c in range(col + 1, len(board)):
+        board[row][c] = "x"
+    for c in range(col - 1, -1, -1):
+        board[row][c] = "x"
+    for r in range(row + 1, len(board)):
+        board[r][col] = "x"
+    for r in range(row - 1, -1, -1):
+        board[r][col] = "x"
+    c = col + 1
+    for r in range(row + 1, len(board)):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    c = col - 1
+    for r in range(row - 1, -1, -1):
+        if c < 0:
+            break
+        board[r][c]
+        c -= 1
+    c = col + 1
+    for r in range(row - 1, -1, -1):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    c = col - 1
+    for r in range(row + 1, len(board)):
+        if c < 0:
+            break
+        board[r][c] = "x"
+        c -= 1
 
 
-if __name__ == '__main__':
+def recursive_solve(board, row, queens, solutions):
+    """
+    Recursively solve an N-queens puzzle
+    """
+    if queens == len(board):
+        solutions.append(get_solution(board))
+        return (solutions)
+
+    for c in range(len(board)):
+        if board[row][c] == " ":
+            tmp_board = board_deepcopy(board)
+            tmp_board[row][c] = "Q"
+            xout(tmp_board, row, c)
+            solutions = recursive_solve(tmp_board, row + 1,
+                                        queens + 1, solutions)
+
+    return (solutions)
+
+
+if __name__ == "__main__":
+    """
+    Program execution starts here.
+    """
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-    nqueens(sys.argv[1])
+    if sys.argv[1].isdigit() is False:
+        print("N must be a number")
+        sys.exit(1)
+    if int(sys.argv[1]) < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    board = init_board(int(sys.argv[1]))
+    solutions = recursive_solve(board, 0, 0, [])
+    for sol in solutions:
+        print(sol)
