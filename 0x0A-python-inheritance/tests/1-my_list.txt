@@ -1,0 +1,64 @@
+Using ``my_list``
+-------------------
+
+    >>> MyList = __import__('1-my_list').MyList
+
+Now use it:
+0.check __docs__:
+
+    >>> main_docs = __import__('1-my_list').__doc__
+    >>> main_docs is not None
+    True
+    >>> len(main_docs) > 0
+    True
+    >>> module_docs = __import__('1-my_list').MyList.__doc__
+    >>> module_docs is not None
+    True
+    >>> len(module_docs) > 0
+    True
+    >>> function_docs = __import__('1-my_list').MyList.print_sorted.__doc__
+    >>> function_docs is not None
+    True
+    >>> len(function_docs) > 0
+    True
+
+1.Base Case:
+
+    >>> my_list = MyList()
+    >>> my_list.append(1)
+    >>> my_list.append(4)
+    >>> my_list.append(2)
+    >>> my_list.append(3)
+    >>> my_list.append(5)
+    >>> print(my_list)
+    [1, 4, 2, 3, 5]
+    >>> my_list.print_sorted()
+    [1, 2, 3, 4, 5]
+    >>> print(my_list)
+    [1, 4, 2, 3, 5]
+
+2.Empty List:
+    
+    >>> my_list = MyList()
+    >>> my_list.print_sorted()
+    []
+
+3.Alphabet Test:
+
+    >>> my_list = MyList()
+    >>> my_list.append("David")
+    >>> my_list.append("Mina")
+    >>> my_list.append("mina")
+    >>> my_list.print_sorted()
+    ['David', 'Mina', 'mina']
+
+4.Mixed test:
+
+    >>> my_list = MyList()
+    >>> my_list.append("David")
+    >>> my_list.append(1)
+    >>> my_list.append(True)
+    >>> my_list.print_sorted()
+    Traceback (most recent call last):
+    ...
+    TypeError: '<' not supported between instances of 'int' and 'str'
